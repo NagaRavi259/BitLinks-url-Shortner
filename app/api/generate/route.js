@@ -12,7 +12,12 @@ export async function POST(request) {
         });
     }
 
-    await insertLink(body.url, body.shortUrl);
+    let targetUrl = body.url;
+    if (!targetUrl.startsWith('http://') && !targetUrl.startsWith('https://')) {
+        targetUrl = `https://${targetUrl}`;
+    }
+
+    await insertLink(targetUrl, body.shortUrl);
 
     return Response.json({success: true , error: false, message: 'Short URL generated successfully' })
   }
