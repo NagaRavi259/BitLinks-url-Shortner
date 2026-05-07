@@ -1,14 +1,10 @@
 import { redirect } from "next/navigation"
-import clientPromise from "../lib/mongodb"
+import { findLink } from "@/app/lib/db"
 
 export default async function Page({ params }) {
     const shorturl = (await params).shorturl
-    const client = await clientPromise;
-    const db = client.db('bitLinks');
-    const collection = db.collection('links');
 
-
-    const shortUrlExists = await collection.findOne({shortUrl : shorturl});
+    const shortUrlExists = await findLink(shorturl);
     if(shortUrlExists){
          redirect(shortUrlExists.url);
     }

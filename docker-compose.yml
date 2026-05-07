@@ -1,0 +1,20 @@
+services:
+  bitlinks:
+    build: .
+    container_name: bitlinks-app
+    volumes:
+      # Bind mount the current directory to /app in the container
+      - .:/app
+      # Anonymous volume for node_modules to avoid cross-platform binary issues (Windows vs Linux)
+      - /app/node_modules
+      # Persistent volume for the database if you want to keep it even if you delete the container
+      # Since it's inside the bind-mounted directory, it will also appear on your host at ./database
+      - ./database:/app/database
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=development
+    # Ensure dependencies are installed inside the container environment on start
+    command: sh -c "npm install && npm run dev"
